@@ -1,0 +1,3 @@
+geometry python moduls are about :
+	points, lines, surfaces, volumes, forms, shapes.
+
