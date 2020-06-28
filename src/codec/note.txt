@@ -1,0 +1,5 @@
+codec can means:
+	compression decompression
+		or
+	coding decoding
+
