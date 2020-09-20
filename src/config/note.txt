@@ -1,0 +1,9 @@
+aka names :
+	confit => conf it
+	init-conf
+	config
+	settings
+
+this modul is useful for setting programs at startup, 
+returning the merge of configuration files and command line instructions
+
