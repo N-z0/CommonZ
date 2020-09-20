@@ -1,0 +1,7 @@
+aka names :
+	logger
+	logging 	already used by official module 
+	syslog already used by official module 
+	debug
+	debugger
+ 
