@@ -1,0 +1,8 @@
+io = input / output
+
+can concern:
+	Shell terminal
+	light-emitting diode (LED) on external devices
+	joysticks
+	3D printer
+	and many others devices
