@@ -1,0 +1,46 @@
+#File	#date	#Source	#Software	#Creator	#Contributors	#Owner	#Rights	#RightsURL	#ContactURL
+*	2021-08-13					N-z0	Rights specified by the local license file	license.md	syslog@mail.com
+docs/contents/logo/logo.svg	2019			N-z0			http://creativecommons.org/publicdomain/zero/1.0/	http://creativecommons.org/publicdomain/zero/1.0/	
+src/animasnd/audio.py	2008			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/animasnd/image.py	2008			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/animasnd/video.py	2008			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/codec/codec.py	2019			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/codec/condensat.py	2019			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/codec/crypto.py	2019			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/config/config.py	2008/10			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/constants/constants.py	2010			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/convert/colors.py	2008-08			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/convert/data.py	2020-09-20			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/convert/numbers.py	2017			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/convert/text.py	2020-09-20			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/datafiles/eml.py	2010			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/datafiles/html.py	2020-06-20			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/datafiles/ini.py	2021			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/datafiles/jon.py	2020-06-20			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/datafiles/mtl.py	2010			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/datafiles/obj.py	2010			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/datafiles/tsv.py	2015			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/datafiles/txt.py	2021			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/datafiles/yml.py	2020-06-20			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/ds/chain.py	2009-01			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/ds/matrix.py	2009-01			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/ds/quaternion.py	2009-01			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/ds/table.py	2011			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/ds/vector.py	2009-01			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/fs/actions.py	2020			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/fs/checks.py	2020			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/fs/hashers.py	2020			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/fs/pathnames.py	2020			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/fs/permits.py	2020			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/fs/temps.py	2020			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/fs/timers.py	2020			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/geometry/circular.py	2016			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/geometry/curves.py	2016			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/geometry/polyhedra.py	2016			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/io/tty.py	2020-09-25			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/logger/logger.py	2016-02-25			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/net/aws.py	2017			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/net/client.py	2008			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/net/ftp.py	2020-6-17			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/net/server.py	2008			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
+src/timer/timer.py	2016			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net

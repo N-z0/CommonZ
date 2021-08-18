@@ -1,0 +1,9 @@
+#Optional	#Name	#VersionMini	#VersionMaxi	#Address
+false	boto3	1.9.253		https://boto3.amazonaws.com/v1/documentation/api/latest/index.html
+false	PyGObject	3.36.0		https://pygobject.readthedocs.io/en/latest/
+false	opencv_contrib_python	4.5.3.56		https://github.com/opencv/opencv-python
+false	numpy	1.17.4		https://numpy.org/
+false	rsa	3.4.2		https://stuvel.eu/software/rsa/
+false	Pillow	8.3.1		https://pillow.readthedocs.io/en/stable/
+false	pycryptodome	3.10.1		https://pycryptodome.readthedocs.io/en/latest/
+false	ruamel.yaml	1.0.0		https://sourceforge.net/p/ruamel-yaml/code/ci/default/tree/
