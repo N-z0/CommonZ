@@ -7,13 +7,13 @@
 
 __doc__ = "All progs have the need to output some messages,This module will provide many options for output prog's messages."#information describing the purpose of this modul
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "v3.0.0"# version number,date or about last modification made compared to the previous version
+__version__ = "v4.0.0"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2016-02-25"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
 __maintainer__ = "Nzo"#person who curently makes improvements, replacing the author
 __credits__ = []#passed mainteners and any other helpers
-__contact__ = "syslog@laposte.net"# current contact adress for more info about this file
+__contact__ = "syslog@laposte.net"# current contact address for more info about this file
 
 
 
@@ -60,32 +60,48 @@ import sys # use for stderr
 
 import logging # logs system offering many options for logs output : file,syslog,terminal,etc,
 from logging import handlers
+
+
+
 ### the following part is executed only one time even if this module is imported many times
-### adds a not effective default logger , which will forward messages after been setup.
-root_logger = logging.getLogger()
-root_logger.addHandler(logging.NullHandler()) # all handlers associated with the logger are called to dispatch log messages.
-#logger.debug(msg, *args, **kwargs)
-#logger.info(msg, *args, **kwargs)
-#logger.warning(msg, *args, **kwargs)
-#logger.error(msg, *args, **kwargs)
-#logger.critical(msg, *args, **kwargs)
+
+### lastResort is used to handle logging events in the absence of any logging configuration.
+### The end result is to just print the message to sys.stderr.
+### This replaces the earlier error message saying that “no handlers could be found for logger XYZ”.
+### If you need the earlier behaviour for some reason, lastResort can be set to None.
+#logging.lastResort=None
+
+### by default the root logger is used
+logger = logging.getLogger()
+### set the root logger not effective
+### then by default any external module library will not be able to send messages trough the root logger
+logger.addHandler(logging.NullHandler())
+### default log level is logging.WARNING so need to change it.
+### logging.NOTSET which causes all messages to be processed when the logger is the root logger,
+logger.setLevel(logging.NOTSET)
+
+### this can be loaded with file lines used for logs messages
+### at index 0 a none message is always stored (for matching file line number and log index)
+messages=('')
 
 
 
-def setup(progname,logfile,syslog_verbosity=0,terminal_verbosity=0,logfile_verbosity=0):
-	"""define what type of messages will be logged and how """
-	### get root logger and set log system
-	#root_logger =logger.getChild(progname)
-	#root_logger=logging.getLogger(__name__)
-	#root_logger = logging.getLogger(progname)
-	#root_logger=logging.getLogger()
+def setup(progname,logfile=None,syslog_verbosity=0,terminal_verbosity=0,logfile_verbosity=0):
+	"""define what type of messages will be logged and how"""
+	global logger
+	### get a logger and set log system
+	### if progname=None the root logger is used
+	logger = logging.getLogger(progname)
 	#logging.basicConfig(filename='example.log',level=logging.DEBUG)
-	root_logger.setLevel(logging.NOTSET)# default is logging.WARNING so need to change it for getting all logs
+	### default log level is logging.WARNING so need to change it.
+	### logging.NOTSET which causes all messages to be processed when the logger is the root logger,
+	### or delegation to the parent when the logger is a non-root logger.
+	logger.setLevel(logging.DEBUG)
+	### set level for each output system
 	if syslog_verbosity==0 and terminal_verbosity==0 and logfile_verbosity==0 :
 		### if all verbosity are at zero, all logs are ignored
 		nh = logging.NullHandler()
-		nh.setLevel(logging.NOTSET)
-		root_logger.addHandler(nh)
+		logger.addHandler(nh)
 	else :
 		logging_levels=(None,logging.CRITICAL,logging.ERROR,logging.WARNING,logging.INFO,logging.DEBUG,logging.NOTSET)
 		if syslog_verbosity>0 :
@@ -93,13 +109,13 @@ def setup(progname,logfile,syslog_verbosity=0,terminal_verbosity=0,logfile_verbo
 			sh = handlers.SysLogHandler(address='/dev/log')#If not specified localhost:514 is used. Better than system dependent /dev/log on Linux /var/run/syslog on OS/X
 			sh.setFormatter( logging.Formatter("{} %(message)s".format(progname)) )
 			sh.setLevel(logging_levels[syslog_verbosity])
-			root_logger.addHandler(sh)
+			logger.addHandler(sh)
 		if terminal_verbosity>0 :
 			### logs go on stderr terminal
 			th = logging.StreamHandler(sys.stderr)
 			th.setFormatter( logging.Formatter("【%(levelname)s】:%(message)s") )
 			th.setLevel(logging_levels[terminal_verbosity])
-			root_logger.addHandler(th)
+			logger.addHandler(th)
 		if logfile_verbosity>0 :
 			### logs go on logfile
 			### the logfile is deleted at each start, good for limit the file size,and reducing time for auditing the logs.
@@ -107,19 +123,42 @@ def setup(progname,logfile,syslog_verbosity=0,terminal_verbosity=0,logfile_verbo
 			fh = logging.FileHandler(logfile,mode='w',encoding='utf-8',delay=False)
 			fh.setFormatter( logging.Formatter('%(created)0.3f\t%(levelname)s\t%(message)s') )
 			fh.setLevel(logging_levels[logfile_verbosity])
-			root_logger.addHandler(fh)
+			logger.addHandler(fh)
+	
+	
+def load_messages(pathname):
+	"""load messages from .txt file lines"""
+	global messages
+	with open(pathname,'r') as txt_file:
+		### at index 0 a none message is always stored
+		messages=tuple(['']+[line.strip() for line in txt_file])
+	
+	
 
-def log_debug(message):
-	root_logger.debug(message)
-def log_info(message):
-	root_logger.info(message)
-def log_warning(message):
-	root_logger.warning(message)
-def log_error(message):
-	root_logger.error(message)
-def log_critical(message):
-	root_logger.critical(message)
+def log_debug(index,data=()):
+	"""log a debug level message"""
+	log=messages[index].format(*data)
+	logger.debug(log)
+def log_info(index,data=()):
+	"""log a info level message"""
+	log=messages[index].format(*data)
+	logger.info(log)
+def log_warning(index,data=()):
+	"""log a warning level message"""
+	log=messages[index].format(*data)
+	logger.warning(log)
+def log_error(index,data=()):
+	"""log a error level message"""
+	log=messages[index].format(*data)
+	logger.error(log)
+def log_critical(index,data=()):
+	"""log a critical level message"""
+	log=messages[index].format(*data)
+	logger.critical(log)
+
 
 def shutdown():
+	"""perform logging system shutdown"""
+	### normally there’s no need to call this function
+	### even without the logging module will shutdown
 	logging.shutdown()
-
