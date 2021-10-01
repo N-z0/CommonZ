@@ -1,2 +1,3 @@
 #date	#version	#title	#comment
 2021/8/18	1.0.0	FirstOne	13 sub-packages created;doc edited;shortcuts added
+2021/10/2	1.0.1	FixOne	corrects the data returned by the YML parser
