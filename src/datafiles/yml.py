@@ -7,7 +7,7 @@
 
 __doc__ = "YAML file reading and writing."#information describing the purpose of this module
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "1.0.0"# version number,date or about last modification made compared to the previous version
+__version__ = "1.0.1"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2020-06-20"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
@@ -28,7 +28,15 @@ import io # used to open a writable yml file
 
 def get_data(yml_file):
 	"""read YAML file and return database"""
-	dico = yaml.load(open(yml_file,'r'), Loader=yaml.RoundTripLoader)
+	### many loading modes are available
+	### RoundTripLoader allow to keep comments but the types of returned data are not regular python data, ex: ruamel.yaml.scalarfloat.ScalarFloat ruamel.yaml.comments.CommentedSeq
+	#dico = yaml.round_trip_load(open(yml_file,'r'))
+	### safe_load allow to keep regular python data type
+	dico = yaml.safe_load(open(yml_file,'r'))
+	### 'load(stream)' without further arguments can be unsafe. Use 'load(stream, Loader=ruamel.yaml.Loader)'
+	#dico = yaml.load(open(yml_file,'r'))
+	### load_all produce error warning: you should consider using safe_load(stream)
+	#dico = yaml.load_all(open(yml_file,'r'))
 	return dico
 
 
