@@ -7,3 +7,4 @@ false	rsa	3.4.2		https://stuvel.eu/software/rsa/
 false	Pillow	8.3.1		https://pillow.readthedocs.io/en/stable/
 false	pycryptodome	3.10.1		https://pycryptodome.readthedocs.io/en/latest/
 false	ruamel.yaml	1.0.0		https://sourceforge.net/p/ruamel-yaml/code/ci/default/tree/
+false	gettext	0.0.0		https://docs.python.org/3/library/gettext.html
