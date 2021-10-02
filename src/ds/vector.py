@@ -7,7 +7,7 @@
 
 __doc__ = "a python vector module.shamely hacked from Alexander Pletzer code 5 Jan 00/11 April 2002"#information describing the purpose of this module
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "2.0.0"# version number,date or about last modification made compared to the previous version
+__version__ = "2.0.1"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 #__copyright__ = "Copyright 2000, The X Project"
 __date__ = "2009-01"#started creation date / year month day
@@ -185,11 +185,15 @@ def normaliz(vector):
 	"set vector length equal to 1"
 	norm = length(vector)
 	return Vector(  map( lambda n: n/norm , vector )  )
-def scale(vector,mini_scale,maxi_scale):
-	"""return a vector with values matching the interval of mini_scale maxi_scale"""
-	offset=maxi_scale-mini_scale
-	vector=normaliz(vector)*offset+mini_scale
-	return Vector
+
+def scale(vector,mini,maxi):
+	"""return a vector with values matching the interval between mini maxi"""
+	scale=maxi-mini
+	vmax=max(vector)
+	vmin=min(vector)
+	delta=vmax-vmin
+	vector=Vector(map( lambda n: ((n-vmin)/delta)*scale+mini , vector ))
+	return vector
 
 def scalar_product(vector_a,vector_b):
 	"""dot product of vectors a b (scalar product) dot(a,b)"""
