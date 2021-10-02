@@ -1,6 +1,6 @@
 #File	#date	#Source	#Software	#Creator	#Contributors	#Owner	#Rights	#RightsURL	#ContactURL
-*	2021-08-13					N-z0	Rights specified by the local license file	license.md	syslog@mail.com
-docs/contents/logo/logo.svg	2019			N-z0			http://creativecommons.org/publicdomain/zero/1.0/	http://creativecommons.org/publicdomain/zero/1.0/	
+*	2021-08-13					N-z0	Rights specified by the local license file	license.md	syslog@laposte.net
+docs/contents/logo/logo.svg	2019			N-z0			CC0 1.0	http://creativecommons.org/publicdomain/zero/1.0/	syslog@laposte.net
 src/animasnd/audio.py	2008			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
 src/animasnd/image.py	2008			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
 src/animasnd/video.py	2008			N-zo syslog@laposte.net	Nzo		public domain		syslog@laposte.net
