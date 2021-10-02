@@ -1,3 +1,4 @@
 #date	#version	#title	#comment
 2021/8/18	1.0.0	FirstOne	13 sub-packages created;doc edited;shortcuts added
 2021/10/2	1.0.1	FixOne	corrects the data returned by the YML parser
+2021/10/3	2.0.0	UpTwo	add translation module;upgrade log system;upgrade config module;fix yml parser;fix vector scale
