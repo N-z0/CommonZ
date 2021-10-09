@@ -7,7 +7,7 @@
 
 __doc__ = "this module concern path and names of all directories and files on the system"#information describing the purpose of this module
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "1.0.0"# version number,date or about last modification made compared to the previous version
+__version__ = "1.1.0"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2020"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
@@ -26,6 +26,55 @@ import stat # use for hardlinks
 #import fnmatch # support for Unix shell-style wildcards, which are not the same as regular expressions
 #import glob # finds all the pathnames matching a specified pattern according to the rules used by the Unix shell 
 
+### the freedesktop.org conventional standards path
+#import xdg # PyXDG support various freedesktop standards. must be installed (available in Debian repository)
+import appdirs # python-appdirs is for determining appropriate platform-specific directories,  must be installed (available in Debian repository)
+
+
+
+def get_working_dir():
+	"""get working directory"""
+	#wd= os.environ['PWD']
+	wd=os.getcwd()
+	#print(wd)#
+	return wd
+
+def get_home_dir():
+	"""get user home directory"""
+	#home = os.path.expanduser("~")
+	home = os.getenv("HOME")
+	#home =  pathlib.Path.home()# need to import pathlib (if Python 3.5+) 
+	#print(home)#
+	return home
+
+def get_log_dir(prog_name,prog_publisher=None):
+	"""get logs paths,
+	 for the setup of sub directories additional publisher identity can be used"""
+	return appdirs.user_log_dir(prog_name,prog_publisher)# XDG Specification: ~/.cache/prog_name/log
+
+def get_cache_dir(prog_name,prog_publisher=None):
+	"""get cache path,
+	 for the setup of sub directories additional publisher identity can be used"""
+	return appdirs.user_cache_dir(prog_name,prog_publisher) # XDG Specification: ~/.cache/prog_name
+
+def get_data_dirs(prog_name,prog_publisher=None):
+	"""get data path,(contain unalterable program data)
+	 (high priority at the begin of the list,low priority at the end of the list)
+	 for the setup of sub directories additional publisher identity can be used"""
+	pathnames=[]
+	pathnames.append( appdirs.user_data_dir(prog_name,prog_publisher) )# XDG Specification: ~/.local/share/prog_name
+	pathnames.extend( appdirs.site_data_dir(prog_name,prog_publisher, multipath=True).split(":") )# should be: /usr/share but return /usr/share/xfce4
+	return pathnames
+
+def get_cfg_dirs(prog_name,prog_publisher=None):
+	"""get the cfg paths
+	 (high priority at the begin of the list,low priority at the end of the list)
+	 for the setup of sub directories additional publisher identity can be used"""
+	pathnames=[]
+	pathnames.append( appdirs.user_config_dir(prog_name,prog_publisher) ) # XDG Specification:  ~/.config/prog_name/
+	pathnames.extend( appdirs.site_config_dir(prog_name,prog_publisher, multipath=True).split(":") ) # XDG Specification:  /etc/xdg/prog_name/
+	#print(pathnames)#
+	return pathnames
 
 
 def get_common_path(path_list):
@@ -47,6 +96,7 @@ def get_real_path(pathname):
 
 def get_path(pathname):
 	"""extract and return the first part of the given pathname"""
+	#return path.normpath( path.join(pathname,os.pardir) )
 	return path.dirname(pathname)
 
 def get_name(pathname):
@@ -60,10 +110,12 @@ def join_pathname(dirs,name):
 
 def get_base_name(pathname):
 	"""from a complete file name return the first part, without any ext"""
+	#name = path.splitext(pathname)[0] # work only if not more than 1 .ext
 	name = pathlib.Path(pathname)
 	while name.suffixes :
 		name= pathlib.Path(name.stem)
-	return name.stem
+	name=name.stem
+	return name
 
 def join_base_name_ext(base_name,ext_list):
 	"""returns a path made up of the base name and one or more extensions"""
@@ -71,6 +123,7 @@ def join_base_name_ext(base_name,ext_list):
 
 def get_name_ext(pathname):
 	"""from a complete file name return the last part composed of one or more ext"""
+	#ext_list=path.splitext(pathname)[1:] # work only if not more than 1 .ext
 	ext_list=[]
 	for ext in pathlib.Path(pathname).suffixes :
 		ext_list.append( ext.strip(os.extsep) )
