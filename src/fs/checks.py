@@ -7,7 +7,7 @@
 
 __doc__ = "this module allow to check and get info about the file system"#information describing the purpose of this module
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "1.0.0"# version number,date or about last modification made compared to the previous version
+__version__ = "2.0.1"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2020"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
@@ -29,6 +29,7 @@ import filecmp # this module defines functions to compare files and directories,
 import mimetypes	#giving files MIME types.
 
 
+
 ### types constants for file system items
 TYPE_DIRECTORY='directory'
 TYPE_SYMBOLIC_LINK ='symbolic_link'
@@ -38,11 +39,6 @@ TYPE_SPECIAL_CHARACTER_DEVICE='Character_device'
 TYPE_BLOK_DEVICE='Block_device'
 TYPE_FIFO='fifo'
 TYPE_SOCKET='socket'
-
-### platform constants names
-PLATFORM_LINUX='linux'
-PLATFORM_WINDOWS='win'
-PLATFORM_UNKNOW='unknow'
 
 
 
@@ -114,21 +110,8 @@ def disk_usage(pathname):
 
 
 def hardlink_qantum(pathname):
-	"""return the number of harlinks made for the given pathname"""
+	"""return the number of harlinks made for the given pathname
+	(returns the number of files with the same inode, so it's always at least 1)"""
 	info=os.lstat(pathname)
 	qantum = info[stat.ST_NLINK]
 	return qantum
-
-
-def platform_os():
-	"""return the name of the current used operating system platform"""
-	### can be used to detect the operating systems: os.name,os.uname(),sys.platform,platform.platform(),platform.system(),platform.system_alias(),platform.uname()
-	### the operating system information should be also in the env variables, but its not certain
-	if sys.platform.startswith(PLATFORM_LINUX):
-		return PLATFORM_LINUX
-	elif platform.startswith(PLATFORM_WINDOWS):
-		return PLATFORM_WINDOWS
-	else :
-		return PLATFORM_UNKNOW
-
-

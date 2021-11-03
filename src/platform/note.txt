@@ -1,0 +1,2 @@
+'os' name is already taken by the Python builtin module,
+So lets use "platform" name instead.
