@@ -7,7 +7,7 @@
 
 __doc__ = "this module allow to check and get info about the file system"#information describing the purpose of this module
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "2.0.0"# version number,date or about last modification made compared to the previous version
+__version__ = "2.0.1"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2020"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
@@ -110,7 +110,8 @@ def disk_usage(pathname):
 
 
 def hardlink_qantum(pathname):
-	"""return the number of harlinks made for the given pathname"""
+	"""return the number of harlinks made for the given pathname
+	(returns the number of files with the same inode, so it's always at least 1)"""
 	info=os.lstat(pathname)
 	qantum = info[stat.ST_NLINK]
 	return qantum
