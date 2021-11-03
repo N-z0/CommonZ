@@ -7,7 +7,7 @@
 
 __doc__ = "this module concern path and names of all directories and files on the system"#information describing the purpose of this module
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "1.1.0"# version number,date or about last modification made compared to the previous version
+__version__ = "2.0.1"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2020"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
@@ -159,6 +159,23 @@ def get_recursive_content(search_path,includ_files=True,includ_directories=True,
 	return pathnames_list
 
 
+def search_directory_content(search_path,search_name,includ_files=True,includ_directories=True,fullpath=True):
+	"""search and returns the list of files and directories found in the given directory"""	
+	pathnames_list=[]
+	for root, dirs, files in os.walk(search_path,topdown=False):
+		if not includ_files :
+			files=[]
+		if not includ_directories :
+			dirs=[]
+		for name in dirs+files :
+			if name==search_name :
+				pathname= path.join(root,name)# root contain the all path
+				if not fullpath :
+					pathname= path.relpath(pathname,search_path)
+				pathnames_list.append(pathname)
+	return pathnames_list
+
+
 def filter_pathname(pathname,includ=[],exclud=[],default=True):
 	""" 
 	returns True if path in exclud list
@@ -166,7 +183,9 @@ def filter_pathname(pathname,includ=[],exclud=[],default=True):
 	or return default valu
 	"""
 	while pathname!='/' :
-		if pathname in includ :
+		if pathname in includ and pathname in exclud :
+			return default
+		elif pathname in includ :
 			return False
 		elif pathname in exclud :
 			return True
@@ -192,16 +211,6 @@ def filter_ext(fullname,ext_list):
 		ext=ext.strip(os.extsep)
 		#print(ext)#
 		if ext in ext_list :
-			return True
-	return False
-
-def filter_html_folders(pathname):
-	"""
-	returns True if pathname is an html directory
-	otherwise returns False
-	"""
-	if path.isdir(pathname) :
-		if pathname.endswith("_fichiers") or pathname.endswith("_files") :
 			return True
 	return False
 
