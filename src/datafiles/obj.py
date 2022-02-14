@@ -7,7 +7,7 @@
 
 __doc__ = "3D obj file loader"#information describing the purpose of this module
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "2.0.0"# version number,date or about last modification made compared to the previous version
+__version__ = "3.0.0"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2010"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
@@ -17,64 +17,71 @@ __contact__ = "syslog@laposte.net"# current contact adress for more info about t
 
 
 
+MAT_LIB='mtllib'
+USEMAT='usemat'
+USEMTL='usemtl'
+SMOOTH='s'
+FACE='f'
+GROUP='g'
+OBJECTS='o'
+V='v'
+VT='vt'
+VN='vn'
+VP='vp'
+
+
+
 def load_obj_file(filepath):
 	"""read 3D obj file and return data"""
 	#obj_file_list=[]
 	objet={}
-	vertex_list=[]
-	vertice_list=[]
-	normal_list=[]
-	surface_mat={}
-	group=''
-
-	data_file=open(filepath,'r')
-	for line in data_file.readlines() :
-		if line.startswith('#'):
-			continue
-		data=string.split(line)
-		if not len(data)==0 :
-			signal=data[0]
-			if signal=='v' :
-					vertice_list.append( map(float, values[1:4]) )
-			elif signal=='vt' :
-					vertex_list.append( map(float, values[1:3])  )
-			elif signal=='vn':
-					normal_list.append( map(float, values[1:4]) )
-			elif values[0] == 's':
-					# smoothing-group not currently supported
+	objet[V]=[]
+	objet[VT]=[]
+	objet[VN]=[]
+	objet[OBJECTS]={}
+	with open(filepath, 'r') as data_file:
+		for line in data_file.readlines() :
+			if line.startswith('#'):
+				continue
+			data=line.split()
+			if not len(data)==0 :
+				signal=data[0]
+				if signal==V :
+					objet[V].append( tuple(map(float, data[1:4])) )
+				elif signal==VT :
+					objet[VT].append( tuple(map(float, data[1:3]))  )
+				elif signal==VN:
+					objet[VN].append( tuple(map(float, data[1:4])) )
+				elif signal==VP:
+					### Parameter space vertices not currently supported
 					pass
-			elif signal=='f' :
-					a=map(int,string.split(data[1],'/'))
-					b=map(int,string.split(data[2],'/'))
-					c=map(int,string.split(data[3],'/'))
-					face=(tuple(a),tuple(b),tuple(c))
-					face_list.append(face)
-			elif signal in ('usemtl', 'usemat') :
+				elif signal==SMOOTH:
+					### smoothing-group not currently supported
+					pass
+				elif signal==FACE :
+					face=[]
+					for d in data[1:] :
+						face.append( tuple(map(int,d.split('/'))) )
+					face_list.append( tuple(face) )
+				elif signal in (USEMTL,USEMAT) :
 					material_name=data[1]
-					if not surface_mat.has_key(material_name) :
-						new_face_list=[]
-						surface_mat[material_name]=new_face_list
-					face_list=surface_mat[material_name]
-			elif signal=='mtllib' :
-					mat_lib=data[1]
-			elif signal=='g' :
-					group=data[1]
-			elif signal=='o' :
-					name=data[1]
-			else :
-					warning("signal inconu: "+signal)
-	data_file.close()
-
-	objet={
-		"name":name,
-		"group":group,
-		"mat_lib":mat_lib,
-		"vertex_list":vertex_list,
-		"vertice_list":vertice_list,
-		"normal_list":normal_list,
-		"surface_mat":surface_mat
-		}
-
+					if not mat_lib_name in materials :
+						materials[mat_lib_name]={}
+					mat_lib=materials[mat_lib_name]
+					if not material_name in mat_lib :
+						mat_lib[material_name]=[]
+					face_list=mat_lib[material_name]
+				elif signal==GROUP :
+					materials={}
+					groups[data[1]]=materials
+				elif signal==OBJECTS :
+					groups={}
+					objet[OBJECTS][data[1]]=groups
+				elif signal==MAT_LIB :
+					mat_lib_name=data[1]
+				else :
+					#print("signal unknow: "+signal)
+					pass
 	return objet
 
 
