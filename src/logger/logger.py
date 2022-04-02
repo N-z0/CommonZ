@@ -7,7 +7,7 @@
 
 __doc__ = "All progs have the need to output some messages,This module will provide many options for output prog's messages."#information describing the purpose of this modul
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "v4.0.0"# version number,date or about last modification made compared to the previous version
+__version__ = "v4.1.0"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2016-02-25"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
@@ -82,7 +82,7 @@ logger.setLevel(logging.NOTSET)
 
 ### this can be loaded with file lines used for logs messages
 ### at index 0 a none message is always stored (for matching file line number and log index)
-messages=('')
+messages={'':('',)}
 
 
 
@@ -124,36 +124,35 @@ def setup(progname,logfile=None,syslog_verbosity=0,terminal_verbosity=0,logfile_
 			fh.setFormatter( logging.Formatter('%(created)0.3f\t%(levelname)s\t%(message)s') )
 			fh.setLevel(logging_levels[logfile_verbosity])
 			logger.addHandler(fh)
-	
-	
-def load_messages(pathname):
+
+
+def load_messages(pathname,context=''):
 	"""load messages from .txt file lines"""
 	global messages
 	with open(pathname,'r') as txt_file:
 		### at index 0 a none message is always stored
-		messages=tuple(['']+[line.strip() for line in txt_file])
-	
-	
+		messages[context]=tuple(['']+[line.strip() for line in txt_file])
 
-def log_debug(index,data=()):
+
+def log_debug(index,data=(),context=''):
 	"""log a debug level message"""
-	log=messages[index].format(*data)
+	log=messages[context][index].format(*data)
 	logger.debug(log)
-def log_info(index,data=()):
+def log_info(index,data=(),context=''):
 	"""log a info level message"""
-	log=messages[index].format(*data)
+	log=messages[context][index].format(*data)
 	logger.info(log)
-def log_warning(index,data=()):
+def log_warning(index,data=(),context=''):
 	"""log a warning level message"""
-	log=messages[index].format(*data)
+	log=messages[context][index].format(*data)
 	logger.warning(log)
-def log_error(index,data=()):
+def log_error(index,data=(),context=''):
 	"""log a error level message"""
-	log=messages[index].format(*data)
+	log=messages[context][index].format(*data)
 	logger.error(log)
-def log_critical(index,data=()):
+def log_critical(index,data=(),context=''):
 	"""log a critical level message"""
-	log=messages[index].format(*data)
+	log=messages[context][index].format(*data)
 	logger.critical(log)
 
 
