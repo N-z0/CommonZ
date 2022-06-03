@@ -7,7 +7,7 @@
 
 __doc__ = "provide images support"#information describing the purpose of this module
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "3.0.0"# version number,date or about last modification made compared to the previous version
+__version__ = "3.0.1"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2008"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
@@ -31,9 +31,9 @@ __contact__ = "syslog@laposte.net"# current contact adress for more info about t
 ### so Pillow and PIL are almost the same
 from PIL import Image
 from PIL import ImageChops
-from PIL import ImageDraw
-from PIL import ImageFont
-from PIL import ImageOps
+#from PIL import ImageDraw # Segmentation fault with openGL or GTK
+#from PIL import ImageFont # Segmentation fault with openGL or GTK
+#from PIL import ImageOp # Segmentation fault with openGL or GTK
 from PIL import ImageFilter
 
 ### OpenCV (OpenSource Computer Vision) is available in Debian repo
@@ -234,7 +234,7 @@ class Bitmap :
 
 
 	def get_gl_data(self):
-		"""return image data as opengl image""" 
+		"""return image data as opengl image"""
 		data = self.img.tobytes("raw",self.img.mode)# tostring() has been removed. Please call tobytes() instead.
 		#data = self.img.getData()
 		return data

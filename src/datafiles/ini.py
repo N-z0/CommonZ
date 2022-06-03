@@ -7,7 +7,7 @@
 
 __doc__ = "INI File Reading and Writing."#information describing the purpose of this module
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "1.0.0"# version number,date or about last modification made compared to the previous version
+__version__ = "2.0.0"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2021"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
@@ -18,58 +18,154 @@ __contact__ = "syslog@laposte.net"# current contact adress for more info about t
 
 
 class Parser:
-	def __init__(self, pathname):
-		self.parse = {'':{}}
+	def __init__(self,pathname):
+		"""
+		This ini parser is able to write back the data with comments
+		also can handle different characters signs for comment and keys value
+		"""
+		
 		self.pathname = pathname
-	
-	def read(self):
-		section=''
+		
+		self.parse=[]
+		### read and store the data from the given ini file
 		with open(self.pathname,'r') as f:
 			### A file is already an iterable full of lines.
 			### And it's a smart iterable, reading lines as you need them, with some clever buffering under the covers.
 			### .readlines() reads all the file into memory before starting to loop
 			for line in f :
-				line=line.split("#")[0]
-				line=line.split(";")[0]
-				line=line.strip()
-				if line=='' :
-					pass
-				elif line.startswith('[') and line.endswith(']') :
-					section = line.strip("[]")
-					self.parse.update({section:{}})
-				elif line.find("=") :
-					pair = line.split("=")
+				### seperate data and comments
+				hash_index=line.find("#")
+				semicolon_index=line.find(";")
+				if hash_index>semicolon_index :
+					line=line.split("#",1)
+					comment="#"+line[1]
+					data=line[0]
+				elif hash_index<semicolon_index :
+					line=line.split(";",1)
+					comment=";"+line[1]
+					data=line[0]
+				else :
+					comment=''
+					data=line
+				### 
+				data=data.strip()
+				comment=comment.strip()
+				equal_index=data.find("=")
+				colon_index=data.find(":")
+				if data.startswith('[') and data.endswith(']') :
+					section = data.strip("[]")
+					self.parse.append(["[]",section,comment])
+				elif equal_index<colon_index :
+					pair = data.split(":",1)
 					key = pair[0].strip()
 					value = pair[1].strip()
-					self.parse[section].update({key: value})
+					self.parse.append([":",key,value,comment])
+				elif equal_index>colon_index :
+					pair = data.split("=",1)
+					key = pair[0].strip()
+					value = pair[1].strip()
+					self.parse.append(["=",key,value,comment])
+				elif data=='' :
+					self.parse.append(['','',comment])
 				else :
+					print(line)
 					raise EOFError
 	
+	
 	def get_sections(self):
-		return self.parse.keys()
+		"""get the list of all sections names"""
+		return [data[1] for data in self.parse if data[0]=="[]"]
+	
 	
 	def get_keys(self,section):
-		return self.parse[section].keys()
+		"""get the list of keys found under specified section"""
+		keys_list=[]
+		collect=False
+		for data in self.parse :
+			if data[0]=="[]" :
+				if data[1]==section :
+					collect=True
+				elif collect :
+					break
+				else:
+					pass
+			elif collect and (data[0]==":" or data[0]=="=") :
+				keys_list.append(data[1])
+			else :
+				pass
+		return keys_list
+	
 	
 	def get_valu(self,section,key):
-		return self.parse[section][key]
+		"""get the valu for the specified section and key"""
+		collect=False
+		for data in self.parse :
+			if data[0]=="[]" :
+				if data[1]==section :
+					collect=True
+				elif collect :
+					return None
+				else:
+					pass
+			elif collect and (data[0]==":" or data[0]=="=") and data[1]==key :
+				return data[2]
+			else :
+				pass
+	
 	
 	def set_valu(self,section,key,valu):
-		self.parse[section][key]=str(valu)
+		"""set the valu for the specified section and key"""
+		collect=False
+		for data_index in range(len(self.parse)) :
+			data=self.parse[data_index]
+			if data[0]=="[]" :
+				if data[1]==section :
+					collect=True
+				elif collect :
+					break
+				else:
+					pass
+			elif collect and (data[0]==":" or data[0]=="=") and data[1]==key :
+				self.parse[data_index][2]=valu
+			else :
+				pass
 	
-	def add_section(self,section):
-		self.parse[section]={}
 	
-	def add_key(self,section,key):
-		self.parse[section][key]=''
-		
+	def get_dictionary(self):
+		"""return a dictionary containing all section keys value"""
+		dico={}
+		for data in self.parse :
+			if data[0]=="[]" :
+				section=data[1]
+				dico[section]={}
+			elif data[0]==":" or data[0]=="=" :
+				key=data[1]
+				valu=data[2]
+				dico[section].update({key:valu})
+			else :
+				pass
+		return dico
+	
+	
 	def write_file(self,pathname=None):
+		"""write the ini file"""
 		if not pathname :
 			pathname=self.pathname
 		with open(pathname,'w') as f:
-			for section in self.parse.keys() :
-				f.write( '[{}]\n'.format(section) )
-				for key in self.parse[section].keys() :
-					valu=self.parse[section][key]
-					f.write( '{} = {}\n'.format(key,valu) )
+			for data in self.parse :
+				if data[0]=='[]' :
+					section=data[1]
+					comment=data[2]
+					f.write( '[{}] {}\n'.format(section,comment) )
+				elif data[0]==':' or data[0]=='=' :
+					separator=data[0]
+					key=data[1]
+					valu=data[2]
+					comment=data[3]
+					f.write( '{} {} {} {}\n'.format(key,separator,valu,comment) )
+				elif data[2] :
+					comment=data[2]
+					f.write( '{}\n'.format(comment) )
+				else :
+					f.write( '\n')
 				f.write( '\n' )
