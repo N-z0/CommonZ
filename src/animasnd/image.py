@@ -7,7 +7,7 @@
 
 __doc__ = "provide images support"#information describing the purpose of this module
 __status__ = "Development"#should be one of 'Prototype' 'Development' 'Production' 'Deprecated' 'Release'
-__version__ = "3.0.1"# version number,date or about last modification made compared to the previous version
+__version__ = "3.0.2"# version number,date or about last modification made compared to the previous version
 __license__ = "public domain"# ref to an official existing License
 __date__ = "2008"#started creation date / year month day
 __author__ = "N-zo syslog@laposte.net"#the creator origin of this prog,
@@ -50,14 +50,14 @@ import numpy # use for exporting image as array
 
 
 ### PIL Image modes:
-BITMAP_MODE = '1' #1b this binary mode is not respected, pixels values are stored with 0 or 255.
-GREY_MODE = 'L' #1o shade of grey varies from 0 to 256
+BITMAP_MODE = '1' #1b this binary mode is not respected, pixels values are stored as UINT8
+GREY_MODE = 'L' #1o shade of grey varies from 0 to 255
 LA_MODE = 'LA' # same as L mode with alpha
-INDEX_MODE = 'P' #1o the number of colors in a palette may vary, it is not always 256 colors,
+INDEX_MODE = 'P' #1o the number of colors in a palette may vary, it can be less then 256 colors
 RGB_MODE = 'RGB' #3o true color
 HSV_MODE = 'HSV'	#3o Hue, Saturation, Value
 RGBA_MODE = 'RGBA' #4o true color with transparency
-INT_MODE = 'I' #4o(signed integer) why signed ?? anyway, I did not find any image format with this mode
+INT_MODE = 'I' #4o(signed integer) not sure if really signed.(for png grayscale images not encoded in 1o)
 FLOAT_MODE = 'F' #4o(floating point) I did not find any image format with this mode.
 
 ### resize resample:
@@ -105,9 +105,11 @@ WHITE=(255,255,255)
 
 
 
-### disable DecompressionBomb safety
+### DecompressionBomb safety
+### set the pixels limit
 #Image.MAX_IMAGE_PIXELS = 200000**2
-#Image.warnings.simplefilter('ignore', Image.DecompressionBombWarning)
+### disabled the raise of DecompressionBombError if the Image size exceeds the limit.(could be decompression bomb DOS attack!)
+Image.warnings.simplefilter('ignore', Image.DecompressionBombWarning)
 
 
 
@@ -239,8 +241,12 @@ class Bitmap :
 		#data = self.img.getData()
 		return data
 
-	def get_array(self,tip):
-		"""return image data as numpy array""" 
+	def get_array(self,tip=None):
+		"""
+		return image data as numpy array
+		tip is a numpy dtype (int32,float64,...) if None the data type is inferred from the input data.
+		
+		""" 
 		return numpy.asarray(self.img,dtype=numpy.dtype(tip))
 
 
